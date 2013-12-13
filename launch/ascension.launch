@@ -1,0 +1,30 @@
+<launch>
+  <arg name="publish_tf" default="false" />
+  <arg name="px" default="0.04" />
+  <arg name="py" default="0.0" />
+  <arg name="pz" default="0.0" />
+  <arg name="gx" default="0.12" />
+  <arg name="gy" default="0.0" />
+  <arg name="gz" default="0.0" />
+  <arg name="use_grab_frame" default="true" />
+
+  <node pkg="trakstar" type="trakstar_node" name="trakstar_driver" output="screen" >
+    <param name="publish_tf"    type="bool"   value="$(arg publish_tf)" />
+    <param name="pivot_x" type="double" value="$(arg px)" />
+    <param name="pivot_y" type="double" value="$(arg py)" />
+    <param name="pivot_z" type="double" value="$(arg pz)" />
+    <param name="grab_x"  type="double" value="$(arg gx)" />
+    <param name="grab_y"  type="double" value="$(arg gy)" />
+    <param name="grab_z"  type="double" value="$(arg gz)" />
+    <param name="use_grab_frame"  type="bool" value="$(arg use_grab_frame)" />
+  </node>
+
+  <node pkg="phidgets" type="interface_kit" name="phidgets_interface_pinchers" output="screen" >
+	<param name="serial" type="int" value="265399" />
+  </node>
+
+  <node pkg="phidgets" type="interface_kit" name="phidgets_interface_clutch" output="screen" >
+	<param name="serial" type="int" value="270130" />
+  </node>
+
+</launch>
