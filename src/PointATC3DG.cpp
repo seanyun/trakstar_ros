@@ -91,8 +91,7 @@ namespace trakstar {
 
 PointATC3DG::PointATC3DG() :
     isOk( true )
-{
-    ros::Time::init();
+{    
     usb_init();
 
     dev = find_device( BIRD_VENDOR, BIRD_PRODUCT );
@@ -130,9 +129,10 @@ PointATC3DG::PointATC3DG() :
     }
     ret = usb_bulk_read( handle, BIRD_EP_IN, datain, 32, DELAY );
 
-//    check_bird_errors();
+    check_bird_errors();
 
     reset();
+    usleep(5000000);
 
     dataout[0] = CHANGE_VALUE;
     dataout[1] = FBB_AUTO_CONFIGURATION;

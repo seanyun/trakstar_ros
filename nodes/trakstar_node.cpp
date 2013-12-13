@@ -47,13 +47,17 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "trakstar_driver");
 	ros::NodeHandle n, n_private("~");
+	ros::Time::init();
 
 	//initialize hardware
+	ROS_INFO("Initializing TRAKSTAR. Please wait....");
 	PointATC3DG bird_;
 	if( !bird_ ) {
 		ROS_ERROR("can't open trakstar"); 
 		return -1;
 	}
+	ROS_INFO("Initialization Complete.");
+
 	bird_.setSuddenOutputChangeLock( 0 );	
 	int num_sen=bird_.getNumberOfSensors();
 	ROS_INFO("Number of trakers: %d", num_sen);
