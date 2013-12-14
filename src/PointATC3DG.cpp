@@ -70,10 +70,11 @@
 #define FBB_AUTO_CONFIGURATION      0x32
 	
 // Conversions
-#define WTF         (double) (1.0 / 32768.0)    // word to float
-#define ANGK        (double) (180.0 * WTF)  // word to angle
-#define POSK36      (double) (36.0 * WTF)   // word to position
-#define POSK72      (double) (72.0 * WTF)   // word to position
+#define WTF         	(double) (1.0 / 32768.0)    		// word to float
+#define INCH_TO_METER 	(double) (25.4/1000.0)	
+#define ANGK        	(double) (180.0 * WTF)  		// word to angle
+#define POSK36      	(double) (36.0 * WTF * INCH_TO_METER)   // word to position
+#define POSK72      	(double) (72.0 * WTF * INCH_TO_METER)   // word to position
 
 // helpful macros
 int ret;
@@ -131,8 +132,8 @@ PointATC3DG::PointATC3DG() :
 
     check_bird_errors();
 
-    reset();
-    usleep(5000000);
+    //reset();
+//    usleep(5000000);
 
     dataout[0] = CHANGE_VALUE;
     dataout[1] = FBB_AUTO_CONFIGURATION;
