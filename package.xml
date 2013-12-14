@@ -1,0 +1,31 @@
+<package>
+  <name>trakstar</name>
+  <version>0.0.1</version>
+  <description>Unofficial driver and ROS node for Trakstar</description>
+  <maintainer email="seungkook.yun@gmail.com">Sean Seungkook Yun</maintainer>
+
+  <license></license>
+
+  
+  <author>Sean Seungkook Yun</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>libusb-dev</build_depend>
+  <build_depend>pkg-config</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>tf</build_depend>
+
+  <run_depend>libusb-dev</run_depend>
+  <run_depend>pkg-config</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  
+  <export>
+  </export>
+</package>
+
