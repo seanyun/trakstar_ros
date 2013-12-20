@@ -43,6 +43,19 @@ add_subdirectory(nodes)
 install(DIRECTORY include/ DESTINATION include)
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-#install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(DIRECTORY config DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+
+# Install udev rules
+option(INSTALL_TRAKSTAR_UDEV_RULES "Install udev rules for Trakstar" ON)
+IF (INSTALL_TRAKSTAR_UDEV_RULES)
+  INSTALL (
+    FILES config/99-trakstar.rules
+    DESTINATION "/etc/udev/rules.d"
+    COMPONENT "udev"
+    )
+else (INSTALL_TRAKSTAR_UDEV_RULES)
+  message (STATUS "Udev rules for trakstar not being installed, install them with -DINSTALL_TRAKSTAR_UDEV_RULES=ON")
+endif (INSTALL_TRAKSTAR_UDEV_RULES)
 
 
