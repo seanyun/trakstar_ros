@@ -130,10 +130,9 @@ PointATC3DG::PointATC3DG() :
     }
     ret = usb_bulk_read( handle, BIRD_EP_IN, datain, 32, DELAY );
 
+    //reset();
+    //usleep(5000000);
     //check_bird_errors();
-
-    reset();
-    usleep(5000000);
 
     dataout[0] = CHANGE_VALUE;
     dataout[1] = FBB_AUTO_CONFIGURATION;
@@ -212,7 +211,7 @@ int PointATC3DG::setSensorQuaternion( int iSensorId )
     dataout[1] = POS_QUAT;
     WRITE( dataout, 2 );
 
-    return check_bird_errors();
+    return check_bird_errors();    
 }
 
 int PointATC3DG::setSensorTopHemisphere( int iSensorId )
@@ -456,7 +455,6 @@ int PointATC3DG::check_bird_errors( void )
         case 35:    ROS_ERROR("WARNING(35): Over Temperature" ); break;
         default:    ROS_ERROR("WARNING(%d): Unknown Error Code", datain[0] );
     }
-    ROS_ERROR("\n" );
 
     if( fatal ) {
         isOk = false;

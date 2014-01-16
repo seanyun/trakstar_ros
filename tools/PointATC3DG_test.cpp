@@ -76,18 +76,20 @@ int main( int argc, char** argv )
 {
 	PointATC3DG bird;
 
-	if( !bird ) return -1;
-
-	bird.setSuddenOutputChangeLock( 0 );
+	if( !bird ) return -1;	
 
 	double dX, dY, dZ, dAzimuth, dElevation, dRoll;
 	double* quat=new double[4];
 	
 	int numsen=bird.getNumberOfSensors();
-	for (int i=0; i<numsen; i++)
-		bird.setSensorQuaternion(i);
-
 	printf( "nSensors: %d\n", numsen );
+
+	for (int i=0; i<numsen; i++) {
+		bird.setSuddenOutputChangeLock(i);
+		bird.setSensorQuaternion(i);
+	}
+
+	
 	printf( "    X       Y       Z	   Qw    Qx    Qy    Qz\n" );
 	int rec_count=0;	 
 	time_t ta=time(NULL);
