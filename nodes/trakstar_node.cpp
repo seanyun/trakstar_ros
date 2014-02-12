@@ -35,6 +35,7 @@
 #include <ros/ros.h>
 #include "trakstar/PointATC3DG.hpp"
 #include "trakstar/TrakstarMsg.h"
+#include "trakstar/TrakstarRawMsg.h"
 #include "tf/tf.h"
 
 // Visualization
@@ -75,13 +76,22 @@ int main(int argc, char **argv)
 	double* quat=new double[4];
 
 
-	bool publish_tf = false;
+	bool publish_tf;
 	n_private.param<bool>("publish_tf", publish_tf, false);
 	if(publish_tf)
 		ROS_INFO("Publishing frame data to TF.");
 
+	//orientation of how the sensor tip is attached
+	double rx, ry, rz;
+	n_private.param<double>("attach_roll", rx, 0);
+	n_private.param<double>("attach_pitch", ry, 0);
+	n_private.param<double>("attach_yaw", rz, 0);
+	tf::Matrix3x3 trakstar_attach;
+	trakstar_attach.setEulerYPR(rz, ry, rx);
+
 	// Initialize ROS stuff
 	ros::Publisher trakstar_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_msg", 1);
+	ros::Publisher trakstar_raw_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_raw_msg", 1);
 	tf::TransformBroadcaster *broadcaster = 0;
 	if(publish_tf) 
 		broadcaster = new tf::TransformBroadcaster();
@@ -97,6 +107,10 @@ int main(int argc, char **argv)
 		trakstar::TrakstarMsg msg;
 		msg.header.stamp = ros::Time::now();
 
+		//publish raw data
+		trakstar::TrakstarRawMsg msg_raw;
+		msg_raw.header.stamp = ros::Time::now();
+
 		std::vector<geometry_msgs::TransformStamped> transforms(num_sen);
 
 		for( int i = 0; i <num_sen  ; ++i ) 
@@ -109,9 +123,16 @@ int main(int argc, char **argv)
 			mat=ros_to_trakstar*mat;
 
 			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
+			msg_raw.transform[i]=transforms[i].transform;
+
+			mat*=trakstar_attach;
+			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
+
 			msg.transform[i]=transforms[i].transform;
 		}
 		trakstar_pub.publish(msg);
+		trakstar_raw_pub.publish(msg_raw);
+
 
 		if(broadcaster)
 		{

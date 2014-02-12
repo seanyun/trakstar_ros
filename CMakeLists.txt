@@ -15,6 +15,7 @@ pkg_check_modules(PC_LIBUSB REQUIRED libusb-1.0)
 add_message_files(
   FILES
   TrakstarMsg.msg
+  TrakstarRawMsg.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
