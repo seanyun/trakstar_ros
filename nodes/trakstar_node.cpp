@@ -35,7 +35,6 @@
 #include <ros/ros.h>
 #include "trakstar/PointATC3DG.hpp"
 #include "trakstar/TrakstarMsg.h"
-#include "trakstar/TrakstarRawMsg.h"
 #include "tf/tf.h"
 
 // Visualization
@@ -108,7 +107,7 @@ int main(int argc, char **argv)
 		msg.header.stamp = ros::Time::now();
 
 		//publish raw data
-		trakstar::TrakstarRawMsg msg_raw;
+		trakstar::TrakstarMsg msg_raw;
 		msg_raw.header.stamp = ros::Time::now();
 
 		std::vector<geometry_msgs::TransformStamped> transforms(num_sen);
