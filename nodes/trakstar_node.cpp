@@ -116,14 +116,14 @@ int main(int argc, char **argv)
 		{
 			bird_.getCoordinatesQuaternion(i, dX, dY, dZ, quat);
 			tf::Vector3 pos(dX, dY, dZ);
-			pos=ros_to_trakstar*pos;
 			tf::Quaternion q(-quat[1], -quat[2], -quat[3], quat[0]);
 			tf::Matrix3x3 mat(q);
-			mat=ros_to_trakstar*mat;
 
 			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
 			msg_raw.transform[i]=transforms[i].transform;
 
+			mat=ros_to_trakstar*mat;
+			pos=ros_to_trakstar*pos;
 			mat*=trakstar_attach;
 			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
 
