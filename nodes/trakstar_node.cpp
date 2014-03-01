@@ -105,10 +105,12 @@ int main(int argc, char **argv)
 		//publish data
 		trakstar::TrakstarMsg msg;
 		msg.header.stamp = ros::Time::now();
+		msg.n_tracker = num_sen;
 
 		//publish raw data
 		trakstar::TrakstarMsg msg_raw;
 		msg_raw.header.stamp = ros::Time::now();
+		msg_raw.n_tracker = num_sen;
 
 		std::vector<geometry_msgs::TransformStamped> transforms(num_sen);
 
