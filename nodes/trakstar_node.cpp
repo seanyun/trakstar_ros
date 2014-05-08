@@ -80,6 +80,13 @@ int main(int argc, char **argv)
 	if(publish_tf)
 		ROS_INFO("Publishing frame data to TF.");
 
+	//offset of how the sensor tip is attached
+	double px, py, pz;
+	n_private.param<double>("px", px, 0);
+	n_private.param<double>("py", py, 0);
+	n_private.param<double>("pz", pz, 0);
+	tf::Vector3 trakstar_attach_pos(px, py, pz);
+
 	//orientation of how the sensor tip is attached
 	double rx, ry, rz;
 	n_private.param<double>("attach_roll", rx, 0);
@@ -125,8 +132,10 @@ int main(int argc, char **argv)
 			msg_raw.transform[i]=transforms[i].transform;
 
 			mat=ros_to_trakstar*mat;
-			pos=ros_to_trakstar*pos;
 			mat*=trakstar_attach;
+
+			pos=ros_to_trakstar*pos+ mat*trakstar_attach_pos;
+
 			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
 
 			msg.transform[i]=transforms[i].transform;

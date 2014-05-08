@@ -1,9 +1,9 @@
 <launch>
   <arg name="publish_tf" default="false" />
-  <arg name="px" default="0.04" />
+  <arg name="px" default="0.0" />
   <arg name="py" default="0.0" />
   <arg name="pz" default="0.0" />
-  <arg name="gx" default="0.12" />
+  <arg name="gx" default="0.0" />
   <arg name="gy" default="0.0" />
   <arg name="gz" default="0.0" />
   <arg name="rx" default="0.0" />
