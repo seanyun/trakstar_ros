@@ -1,14 +1,19 @@
 <launch>
   <arg name="publish_tf" default="false" />
-  <arg name="px" default="0.0" />
+  <arg name="px" default="0.06" />
   <arg name="py" default="0.0" />
   <arg name="pz" default="0.0" />
-  <arg name="gx" default="0.0" />
-  <arg name="gy" default="0.0" />
-  <arg name="gz" default="0.0" />
   <arg name="rx" default="0.0" />
   <arg name="ry" default="0.0" />
-  <arg name="rz" default="3.14" />
+  <arg name="rz" default="0.0" />
+
+  <arg name="px1" default="0.0" />
+  <arg name="py1" default="0.0" />
+  <arg name="pz1" default="0.0" />
+  <arg name="rx1" default="0.0" />
+  <arg name="ry1" default="0.0" />
+  <arg name="rz1" default="3.14" />
+
   <arg name="use_grab_frame" default="true" />
 
   <node pkg="trakstar" type="trakstar_node" name="trakstar_driver" output="screen" >
@@ -16,12 +21,17 @@
     <param name="pivot_x" type="double" value="$(arg px)" />
     <param name="pivot_y" type="double" value="$(arg py)" />
     <param name="pivot_z" type="double" value="$(arg pz)" />
-    <param name="grab_x"  type="double" value="$(arg gx)" />
-    <param name="grab_y"  type="double" value="$(arg gy)" />
-    <param name="grab_z"  type="double" value="$(arg gz)" />
     <param name="attach_roll"  type="double" value="$(arg rx)" />
     <param name="attach_pitch"  type="double" value="$(arg ry)" />
     <param name="attach_yaw"  type="double" value="$(arg rz)" />
+
+    <param name="pivot_x1" type="double" value="$(arg px1)" />
+    <param name="pivot_y1" type="double" value="$(arg py1)" />
+    <param name="pivot_z1" type="double" value="$(arg pz1)" />
+    <param name="attach_roll1"  type="double" value="$(arg rx1)" />
+    <param name="attach_pitch1"  type="double" value="$(arg ry1)" />
+    <param name="attach_yaw1"  type="double" value="$(arg rz1)" />
+
     <param name="use_grab_frame"  type="bool" value="$(arg use_grab_frame)" />
   </node>
 

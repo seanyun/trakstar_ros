@@ -100,7 +100,7 @@ int main( int argc, char** argv )
 		for( int i = 0; i <numsen  ; ++i ) 
 		{
 			bird.getCoordinatesQuaternion(i, dX, dY, dZ, quat);
-			if (i==0) printf( "%i %+6.1f  %+6.1f  %+6.1f  %+4.3f  %+4.3f  %+4.3f   %+4.3f\r",i,
+			if (i==0) printf( "%i %+6.4f  %+6.4f  %+6.4f  %+4.3f  %+4.3f  %+4.3f   %+4.3f\r",i,
 				dX, dY, dZ, quat[0], quat[1], quat[2], quat[3] );
 		}
 	}

@@ -45,122 +45,145 @@ using std::string;
 
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "trakstar_driver");
-	ros::NodeHandle n, n_private("~");
-	ros::Time::init();
+  ros::init(argc, argv, "trakstar_driver");
+  ros::NodeHandle n, n_private("~");
+  ros::Time::init();
 
-	//initialize hardware
-	ROS_INFO("Initializing TRAKSTAR. Please wait....");
-	PointATC3DG bird_;
-	if( !bird_ ) {
-		ROS_ERROR("can't open trakstar"); 
-		return -1;
-	}
-	ROS_INFO("Initialization Complete.");
+  //initialize hardware
+  ROS_INFO("Initializing TRAKSTAR. Please wait....");
+  PointATC3DG bird_;
+  if( !bird_ ) {
+    ROS_ERROR("can't open trakstar"); 
+    return -1;
+  }
+  ROS_INFO("Initialization Complete.");
 
-	bird_.setSuddenOutputChangeLock( 0 );	
-	int num_sen=bird_.getNumberOfSensors();
-	ROS_INFO("Number of trakers: %d", num_sen);
+  bird_.setSuddenOutputChangeLock( 0 );	
+  int num_sen=bird_.getNumberOfSensors();
+  ROS_INFO("Number of trakers: %d", num_sen);
 
-	if (num_sen<2) {
-		ROS_ERROR("at least 2 trackers required"); 
-		return -1;
-	}
+  if (num_sen<2) {
+    ROS_ERROR("at least 2 trackers required"); 
+    return -1;
+  }
 
-	ROS_INFO("Output is set: position/quaternion");
-	for (int i=0; i<num_sen; i++)
-		bird_.setSensorQuaternion(i);
+  ROS_INFO("Output is set: position/quaternion");
+  for (int i=0; i<num_sen; i++)
+    bird_.setSensorQuaternion(i);
 
-	double dX, dY, dZ;
-	double* quat=new double[4];
-
-
-	bool publish_tf;
-	n_private.param<bool>("publish_tf", publish_tf, false);
-	if(publish_tf)
-		ROS_INFO("Publishing frame data to TF.");
-
-	//offset of how the sensor tip is attached
-	double px, py, pz;
-	n_private.param<double>("px", px, 0);
-	n_private.param<double>("py", py, 0);
-	n_private.param<double>("pz", pz, 0);
-	tf::Vector3 trakstar_attach_pos(px, py, pz);
-
-	//orientation of how the sensor tip is attached
-	double rx, ry, rz;
-	n_private.param<double>("attach_roll", rx, 0);
-	n_private.param<double>("attach_pitch", ry, 0);
-	n_private.param<double>("attach_yaw", rz, 0);
-	tf::Matrix3x3 trakstar_attach;
-	trakstar_attach.setEulerYPR(rz, ry, rx);
-
-	// Initialize ROS stuff
-	ros::Publisher trakstar_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_msg", 1);
-	ros::Publisher trakstar_raw_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_raw_msg", 1);
-	tf::TransformBroadcaster *broadcaster = 0;
-	if(publish_tf) 
-		broadcaster = new tf::TransformBroadcaster();
-
-	// mangle the reported pose into the ROS frame conventions
-	const tf::Matrix3x3 ros_to_trakstar( -1,  0,  0,
-		                   	      0,  1,  0,
-		                   	      0,  0, -1 );
-
-	while (n.ok())
-	{
-		//publish data
-		trakstar::TrakstarMsg msg;
-		msg.header.stamp = ros::Time::now();
-		msg.n_tracker = num_sen;
-
-		//publish raw data
-		trakstar::TrakstarMsg msg_raw;
-		msg_raw.header.stamp = ros::Time::now();
-		msg_raw.n_tracker = num_sen;
-
-		std::vector<geometry_msgs::TransformStamped> transforms(num_sen);
-
-		for( int i = 0; i <num_sen  ; ++i ) 
-		{
-			bird_.getCoordinatesQuaternion(i, dX, dY, dZ, quat);
-			tf::Vector3 pos(dX, dY, dZ);
-			tf::Quaternion q(-quat[1], -quat[2], -quat[3], quat[0]);
-			tf::Matrix3x3 mat(q);
-
-			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
-			msg_raw.transform[i]=transforms[i].transform;
-
-			mat=ros_to_trakstar*mat;
-			mat*=trakstar_attach;
-
-			pos=ros_to_trakstar*pos+ mat*trakstar_attach_pos;
-
-			tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
-
-			msg.transform[i]=transforms[i].transform;
-		}
-		trakstar_pub.publish(msg);
-		trakstar_raw_pub.publish(msg_raw);
+  double dX, dY, dZ;
+  double* quat=new double[4];
 
 
-		if(broadcaster)
-		{
-			std::string frames[4] = {"trakstar_left", "trakstar_right", "trakstar_third", "trakstar_fourth"};
-			for(int kk = 0; kk < num_sen; kk++)
-			{
-				transforms[kk].header.stamp = msg.header.stamp;
-				transforms[kk].header.frame_id = "trakstar_base";
-				transforms[kk].child_frame_id = frames[kk];
-			}
+  bool publish_tf;
+  n_private.param<bool>("publish_tf", publish_tf, false);
+  if(publish_tf)
+    ROS_INFO("Publishing frame data to TF.");
 
-			broadcaster->sendTransform(transforms);
-		}
+  //offset of how the sensor tip is attached
+  double px, py, pz;
+  n_private.param<double>("pivot_x", px, 0);
+  n_private.param<double>("pivot_y", py, 0);
+  n_private.param<double>("pivot_z", pz, 0);
+  tf::Vector3 trakstar_attach_pos(px, py, pz);
 
-		ros::spinOnce();
-	}
+  //orientation of how the sensor tip is attached
+  double rx, ry, rz;
+  n_private.param<double>("attach_roll", rx, 0);
+  n_private.param<double>("attach_pitch", ry, 0);
+  n_private.param<double>("attach_yaw", rz, 0);
+  tf::Matrix3x3 trakstar_attach;
+  trakstar_attach.setEulerYPR(rz, ry, rx);
 
-	delete [] quat;
+  //offset of how the sensor tip is attached
+  double px1, py1, pz1;
+  n_private.param<double>("pivot_x1", px1, 0);
+  n_private.param<double>("pivot_y1", py1, 0);
+  n_private.param<double>("pivot_z1", pz1, 0);
+  tf::Vector3 trakstar_attach_pos1(px1, py1, pz1);
+
+  //orientation of how the sensor tip is attached
+  double rx1, ry1, rz1;
+  n_private.param<double>("attach_roll1", rx1, 0);
+  n_private.param<double>("attach_pitch1", ry1, 0);
+  n_private.param<double>("attach_yaw1", rz1, 0);
+  tf::Matrix3x3 trakstar_attach1;
+  trakstar_attach1.setEulerYPR(rz1, ry1, rx1);
+
+
+  // Initialize ROS stuff
+  ros::Publisher trakstar_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_msg", 1);
+  ros::Publisher trakstar_raw_pub = n.advertise<trakstar::TrakstarMsg>("trakstar_raw_msg", 1);
+  tf::TransformBroadcaster *broadcaster = 0;
+  if(publish_tf) 
+    broadcaster = new tf::TransformBroadcaster();
+
+  // mangle the reported pose into the ROS frame conventions
+  const tf::Matrix3x3 ros_to_trakstar( -1,  0,  0,
+	                   	      0,  1,  0,
+	                   	      0,  0, -1 );
+
+  while (n.ok())
+  {
+    //publish data
+    trakstar::TrakstarMsg msg;
+    msg.header.stamp = ros::Time::now();
+    msg.n_tracker = num_sen;
+
+    //publish raw data
+    trakstar::TrakstarMsg msg_raw;
+    msg_raw.header.stamp = ros::Time::now();
+    msg_raw.n_tracker = num_sen;
+
+    std::vector<geometry_msgs::TransformStamped> transforms(num_sen);
+
+    for( int i = 0; i <num_sen  ; ++i ) 
+    {
+	bird_.getCoordinatesQuaternion(i, dX, dY, dZ, quat);
+	tf::Vector3 pos(dX, dY, dZ);
+	tf::Quaternion q(-quat[1], -quat[2], -quat[3], quat[0]);
+	tf::Matrix3x3 mat(q);
+
+	tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
+	msg_raw.transform[i]=transforms[i].transform;
+
+	mat=ros_to_trakstar*mat;
+
+	if (i<1) {
+	  mat*=trakstar_attach;
+	  pos=ros_to_trakstar*pos+ mat*trakstar_attach_pos; 
+        }
+        else {
+	  mat*=trakstar_attach1;
+	  pos=ros_to_trakstar*pos+ mat*trakstar_attach_pos1; 
+        }
+
+
+	tf::transformTFToMsg(tf::Transform(mat,pos), transforms[i].transform);
+
+	msg.transform[i]=transforms[i].transform;
+    }
+    trakstar_pub.publish(msg);
+    trakstar_raw_pub.publish(msg_raw);
+
+
+    if(broadcaster)
+    {
+      std::string frames[4] = {"trakstar_left", "trakstar_right", "trakstar_third", "trakstar_fourth"};
+      for(int kk = 0; kk < num_sen; kk++)
+      {
+        transforms[kk].header.stamp = msg.header.stamp;
+        transforms[kk].header.frame_id = "trakstar_base";
+        transforms[kk].child_frame_id = frames[kk];
+      }
+
+      broadcaster->sendTransform(transforms);
+    }
+
+  ros::spinOnce();
+  }
+
+  delete [] quat;
 }
 
 
