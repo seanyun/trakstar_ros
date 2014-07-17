@@ -1,6 +1,6 @@
 <launch>
   <arg name="publish_tf" default="false" />
-  <arg name="px" default="0.06" />
+  <arg name="px" default="0.0" />
   <arg name="py" default="0.0" />
   <arg name="pz" default="0.0" />
   <arg name="rx" default="0.0" />
@@ -12,7 +12,7 @@
   <arg name="pz1" default="0.0" />
   <arg name="rx1" default="0.0" />
   <arg name="ry1" default="0.0" />
-  <arg name="rz1" default="3.14" />
+  <arg name="rz1" default="0.0" />
 
   <arg name="use_grab_frame" default="true" />
 
