@@ -123,6 +123,10 @@ int main(int argc, char **argv)
 	                   	      0,  1,  0,
 	                   	      0,  0, -1 );
 
+  int frequency = 20;
+  n_private.getParam("frequency", frequency);
+  ros::Rate loop_rate(frequency);
+
   while (n.ok())
   {
     //publish data
@@ -180,7 +184,8 @@ int main(int argc, char **argv)
       broadcaster->sendTransform(transforms);
     }
 
-  ros::spinOnce();
+    loop_rate.sleep();
+    ros::spinOnce();
   }
 
   delete [] quat;
