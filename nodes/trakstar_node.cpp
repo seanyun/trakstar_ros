@@ -49,6 +49,9 @@ int main(int argc, char **argv)
   ros::NodeHandle n, n_private("~");
   ros::Time::init();
 
+  bool hemisphere_back;
+  n_private.param<bool>("hemisphere_back", hemisphere_back, true);
+
   //initialize hardware
   ROS_INFO("Initializing TRAKSTAR. Please wait....");
   PointATC3DG bird_;
@@ -68,8 +71,11 @@ int main(int argc, char **argv)
   }
 
   ROS_INFO("Output is set: position/quaternion");
-  for (int i=0; i<num_sen; i++)
+  for (int i=0; i<num_sen; i++) {
     bird_.setSensorQuaternion(i);
+    if (hemisphere_back)
+      bird_.setSensorHemisphere(i, HEMISPHERE_REAR);
+  }
 
   double dX, dY, dZ;
   double* quat=new double[4];
@@ -123,7 +129,7 @@ int main(int argc, char **argv)
 	                   	      0,  1,  0,
 	                   	      0,  0, -1 );
 
-  int frequency = 20;
+  int frequency = 50;
   n_private.getParam("frequency", frequency);
   ros::Rate loop_rate(frequency);
 

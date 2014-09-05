@@ -56,6 +56,7 @@
 #define RESET                       0x62
 #define METAL                       0x73
 #define POS_QUAT      		    0x5D
+#define HEMISPHERE                  0x4C // 2 bytes
 
 // Examine options
 #define BIRD_STATUS                 0x00 // 2 bytes
@@ -68,6 +69,8 @@
 #define TRANSMITTER_SERIAL_NUMBER   0x1B // 2 bytes
 #define SUDDEN_OUTPUT_CHANGE_LOCK   0x0E // 1 byte
 #define FBB_AUTO_CONFIGURATION      0x32
+
+
 	
 // Conversions
 #define WTF         	(double) (1.0 / 32768.0)    		// word to float
@@ -221,11 +224,13 @@ int PointATC3DG::setSensorTopHemisphere( int iSensorId )
 
 int PointATC3DG::setSensorHemisphere( int iSensorId, char cSphereId )
 {
-    //dataout[0] = 0xf1 + iSensorId;
-//    dataout[1] = CHANGE_VALUE;
-//    dataout[2] = HEMISPHERE;
+  dataout[0] = 0xf1 + iSensorId;
+  dataout[1] = HEMISPHERE;
+  dataout[2] = 0x00;
+  dataout[3] = cSphereId;
+  WRITE(dataout, 4);
 
-    return check_bird_errors();
+  return check_bird_errors();
 }
 
 int PointATC3DG::setMeasurementRate( double dRate )

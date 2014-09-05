@@ -55,6 +55,9 @@
 #define BIRD_EP_IN      0x86
 #endif
 
+#define HEMISPHERE_FRONT 0x00
+#define HEMISPHERE_REAR  0x01
+
 // forward declarations
 struct usb_device;
 struct usb_dev_handle;
