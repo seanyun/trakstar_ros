@@ -50,7 +50,7 @@ int main(int argc, char **argv)
   ros::Time::init();
 
   bool hemisphere_back;
-  n_private.param<bool>("hemisphere_back", hemisphere_back, true);
+  n_private.param<bool>("hemisphere_back", hemisphere_back, false);
 
   //initialize hardware
   ROS_INFO("Initializing TRAKSTAR. Please wait....");

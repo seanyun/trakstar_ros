@@ -16,7 +16,7 @@
 
   <arg name="use_grab_frame" default="true" />
   
-  <arg name="hemisphere_back" default="true" />
+  <arg name="hemisphere_back" default="false" />
 
   <node pkg="trakstar" type="trakstar_node" name="trakstar_driver" output="screen" >
     <param name="publish_tf"    type="bool"   value="$(arg publish_tf)" />
@@ -35,6 +35,8 @@
     <param name="attach_yaw1"  type="double" value="$(arg rz1)" />
 
     <param name="use_grab_frame"  type="bool" value="$(arg use_grab_frame)" />
+    <param name="hemisphere_back"  type="bool" value="$(arg hemisphere_back)" />
+
   </node>
 
 </launch>
