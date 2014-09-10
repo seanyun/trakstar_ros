@@ -75,6 +75,8 @@ int main(int argc, char **argv)
     bird_.setSensorQuaternion(i);
     if (hemisphere_back)
       bird_.setSensorHemisphere(i, HEMISPHERE_REAR);
+    else 
+      bird_.setSensorHemisphere(i, HEMISPHERE_FRONT);
   }
 
   double dX, dY, dZ;
