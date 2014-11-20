@@ -4,7 +4,7 @@
   <description>Unofficial driver and ROS node for Trakstar</description>
   <maintainer email="seungkook.yun@gmail.com">Sean Seungkook Yun</maintainer>
 
-  <license></license>
+  <license>BSD</license>
 
   
   <author>Sean Seungkook Yun</author>
