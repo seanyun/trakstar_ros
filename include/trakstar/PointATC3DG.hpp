@@ -80,7 +80,7 @@ public:
     int setSensorTopHemisphere( int iSensorId );
     int setSensorHemisphere( int iSensorId, char cSphereId );
     int setMeasurementRate( double dRate );
-
+    int setMaximumRange(bool if_72inch);
     int getNumberOfSensors( void );
     int getCoordinatesAngles( int iSensorId,
         double& dX, double& dY, double& dZ,

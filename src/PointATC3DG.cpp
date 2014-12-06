@@ -480,4 +480,18 @@ void PointATC3DG::error( int val, const char* msg, ... )
     isOk = false;
 }
 
+
+int PointATC3DG::setMaximumRange(bool if_72inch)
+{
+  char range= if_72inch ? 1 : 0;
+  posk = if_72inch ? POSK72 : POSK36;
+
+  dataout[0] = CHANGE_VALUE;
+  dataout[1] = BIRD_POSITION_SCALING;
+  dataout[2] = range;
+  WRITE( dataout, 3 );
+
+  return check_bird_errors();
+}
+
 }
