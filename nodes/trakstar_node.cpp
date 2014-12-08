@@ -79,6 +79,11 @@ int main(int argc, char **argv)
       bird_.setSensorHemisphere(i, HEMISPHERE_FRONT);
   }
 
+  bool range_72inch;
+  n_private.param<bool>("range_72inch", range_72inch, false);
+  if (range_72inch)
+    bird_.setMaximumRange(true);
+
   double dX, dY, dZ;
   double* quat=new double[4];
 

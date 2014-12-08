@@ -89,6 +89,8 @@ int main( int argc, char** argv )
 		bird.setSensorQuaternion(i);
 	}
 
+	bird.setMaximumRange(true);
+
 	
 	printf( "    X       Y       Z	   Qw    Qx    Qy    Qz\n" );
 	int rec_count=0;	 
