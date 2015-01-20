@@ -59,6 +59,8 @@ int main(int argc, char **argv)
     ROS_ERROR("can't open trakstar"); 
     return -1;
   }
+  bird_.setMeasurementRate(255.0);
+
   ROS_INFO("Initialization Complete.");
 
   bird_.setSuddenOutputChangeLock( 0 );	
@@ -136,7 +138,7 @@ int main(int argc, char **argv)
 	                   	      0,  1,  0,
 	                   	      0,  0, -1 );
 
-  int frequency = 50;
+  int frequency = 255;
   n_private.getParam("frequency", frequency);
   ros::Rate loop_rate(frequency);
 
