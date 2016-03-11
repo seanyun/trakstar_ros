@@ -59,7 +59,12 @@ int main(int argc, char **argv)
     ROS_ERROR("can't open trakstar"); 
     return -1;
   }
-  bird_.setMeasurementRate(255.0);
+
+  int frequency = 255;
+  n_private.getParam("frequency", frequency);
+  ROS_INFO("Frequency: %d", frequency);
+
+  bird_.setMeasurementRate(static_cast<float>(frequency));
 
   ROS_INFO("Initialization Complete.");
 
@@ -137,9 +142,6 @@ int main(int argc, char **argv)
   const tf::Matrix3x3 ros_to_trakstar( -1,  0,  0,
 	                   	      0,  1,  0,
 	                   	      0,  0, -1 );
-
-  int frequency = 255;
-  n_private.getParam("frequency", frequency);
   ros::Rate loop_rate(frequency);
 
   while (n.ok())

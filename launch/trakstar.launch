@@ -39,6 +39,8 @@
     <param name="hemisphere_back"  type="bool" value="$(arg hemisphere_back)" />
     <param name="range_72inch"  type="bool" value="$(arg range_72inch)" />
 
+    <param name="frequency"  type="int" value="80" />
+
   </node>
 
 </launch>
